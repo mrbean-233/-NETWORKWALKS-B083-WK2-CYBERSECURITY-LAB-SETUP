@@ -1,4 +1,4 @@
-# PENETRATION TESTING REPORT 
+# PENETRATION TESTING REPORT 💻📑
 ### Footprinting & Network Scanning Phases
 
 **W2-PM-FINAL  |  CYBERSECURITY  |  NETWORKWALKS**
@@ -13,79 +13,77 @@
 | **Permission secured from client?** | Yes |
 | **Phases covered** | **Phase 1:** Reconnaissance & Footprinting<br>**Phase 2:** Scanning & Network Discovery<br>**Phase 3-5:** In Progress |
 
-# 1. Liability Disclaimer
+# 1. Liability Disclaimer ⚠️
 
-I have performed these activities only on the systems & devices where I had secured written permission or the devices/systems that I own myself. All these materials are for education and research purpose only. Do not use anything from here to break the law. The instructor, the authors and Networkwalks are not responsible for what you do with this knowledge. Every action you take is your own responsibility. Misuse can lead to criminal charges, heavy fines, loss of your job and a permanent record. In most countries unauthorised access is a crime even when nothing is damaged.
+I performed these activities only on systems & devices where I had secured written permission, or on devices/systems I own. All these materials are for educational and research purposes only. Do not use anything from here to break the law. The instructor, the authors, and Networkwalks are not responsible for what you do with this knowledge. Every action you take is your own responsibility. Misuse can lead to criminal charges, heavy fines, loss of your job, and a permanent record. In most countries, unauthorised access is a crime even when nothing is damaged.
 
-# 2. Introduction
-
-This report covers footprinting the networkwalks.com domain using multiple Kali Linux tools (W2-PM1) and scanning my own local network with Zenmap (W2-PM5). One module covers the footprinting phase and the other covers the scanning phase, so together they show how an attacker moves from gathering public information to mapping live hosts on a network. It is the Week 2 part of my ongoing internship program at Networkwalks.
+# 2. Introduction 👋
+This report covers footprinting the networkwalks.com domain using multiple Kali Linux tools (W2-PM1) and scanning my own local network with Zenmap (W2-PM5). One module covers the footprinting phase, and the other covers the scanning phase, so together they show how an attacker moves from gathering public information to mapping live hosts on a network. It is the Week 2 part of my ongoing internship program at Networkwalks.
 
 All commands were run in Kali Linux (footprinting) and on a Windows PC with Zenmap installed (scanning). Every step below includes the exact command used, the result I observed, a screenshot as evidence, and a short note on why the finding matters from an attacker's point of view.
 
-# 3. Tools Used
+# 3. Tools Used 🔨
 
 The table below lists each tool used in this report and its purpose.
 
 | Tool | Purpose |
 |---|---|
 | Kali Linux & Windows | Operating systems used for reconnaissance activities             |
-| WHOIS                | Find domain registration details (owner, dates, name servers).   |
-| whatweb              | Fingerprint web technologies (server, CMS, plugins, IP).         |
+| WHOIS                | Find domain registration information (owner, dates, name servers).   |
+| whatweb              | Identifies technology used by the website (server, CMS, plugins, IP).         |
 | nslookup             | Resolve the domain name to its IP address using DNS.             |
-| curl -I              | Read the HTTP response headers of the website.                   |
+| curl -I              | Read the HTTP response headers of the website and reveals the server type.                   |
 | wafw00f              | Detect whether a Web Application Firewall protects the site.     |
 | dnsrecon             | Enumerate all DNS records (NS, MX, SPF, TXT, SRV).               |
-| Zenmap (Nmap GUI)    | Scan the local subnet to find live hosts, IPs and MAC addresses. |
-| Windows CMD          | Local IP and MAC address identification                          |
+| Zenmap (Nmap GUI)    | Scan the local subnet to find live hosts, open hosts, IPs, and MAC addresses. |
+| Windows CMD          | Identify Local IP and MAC address.                        |
 
 # 4. Activities Performed
 
-## 4.1 Footprinting & Reconnaissance
+## 4.1 Footprinting & Reconnaissance 🔍
 
-I performed reconnaissance against the `networkwalks.com` domain using six Kali Linux tools: **WHOIS, WhatWeb, Nslookup, Curl, Wafw00f and DNSRecon**. Each tool was used to collect a different type of information about the target.
+I performed reconnaissance against the `networkwalks.com` domain using six Kali Linux tools: **WHOIS, WhatWeb, Nslookup, Curl, Wafw00f, and DNSRecon**. Each tool gathered a different type of information about the target.
 
-First, I used **WHOIS** to obtain publicly available domain registration information and identify the domain’s name servers. The results provided information about the domain registration and hosting infrastructure.
+1. **WHOIS** is used to obtain publicly available domain registration information and identify the domain’s name servers. The results provided information about the domain registration (ID, URL, Date, Contact, etc.) and hosting infrastructure.
 
-I then used **WhatWeb** to identify technologies used by the website. The results identified **WordPress 7.0.4** and **WP Download Manager 3.3.58**, along with other information exposed by the website.
+2. **WhatWeb** was used to identify technologies used by the website. The results identified **WordPress 7.1** and **WP Download Manager 3.3.58**, along with other information exposed by the website.
 
-Using **Nslookup**, I resolved the domain name to its IP address. The provided result identified **192.232.216.135**.
+3. **Nslookup** was used to resolve the domain name to its IP address. The provided result identified **192.232.216.135**.
 
-I used **Curl** with the `-I` option to inspect the HTTP response headers. This provided additional information about the web application and exposed the WordPress REST API endpoint `/wp-json/`.
+4. **Curl** with the `-I` option was used to inspect the HTTP response headers. This provided additional information about the web application and exposed the WordPress REST API endpoint `/wp-json/`.
 
-Next, I used **Wafw00f** to determine whether a Web Application Firewall was protecting the website. The result identified **ModSecurity (SpiderLabs)**.
+5. **Wafw00f** was used to determine whether a Web Application Firewall was protecting the website. The result identified **ModSecurity (SpiderLabs)**.
 
-Finally, I used **DNSRecon** to enumerate DNS records. The results provided information relating to name servers, mail servers, SPF/TXT records, service records and DNS software information.
+6. **DNSRecon** was used to enumerate DNS records. The results provided information on name servers, mail servers, SPF/TXT records, service records, and DNS software information.
 
-## 4.2 Network Scanning with Zenmap
+## 4.2 Network Scanning with Zenmap 🫆
 
 For the second activity, I used **Zenmap** to perform network discovery on my local network. The practical required me to identify my local IP address and subnet, discover live hosts, identify their IP and MAC addresses, and generate a network topology.
 
-I first used the Windows `ipconfig` command to identify my local IP address and LAN subnet. I then entered the subnet into Zenmap and selected **Ping Scan** to identify active hosts.
+I first used the Windows `ipconfig /all` command to identify my local IP address, LAN subnet, and MAC address. I then entered the subnet into Zenmap and selected **Ping Scan** to identify active hosts.
 
 The results provided in the practical identified 7 live hosts:
+`192.168.1.1`
+`192.168.1.5`
+`192.168.1.10`
+`192.168.1.11`
+`192.168.1.12`
+`192.168.1.13`
+`192.168.1.14`
 
-192.168.1.1
-192.168.1.5
-192.168.1.10
-192.168.1.11
-192.168.1.12
-192.168.1.13
-192.168.1.14
+And these are the corresponding MAC addresses for each IP above:
+`2C:B6:C2:34:58:4A`
+`80:35:C1:35:5E:C2`
+`4C:50:DD:2F:EC:3C`
+`4A:DB:CF:0A:AB:B9`
+`CA:4D:A2:62:0B:61`
+`FA:B4:D0:F4:F3:A6`
+`B8:1E:A4:D3:FD:2F`
 
-And, these are the corresponding MAC Address for each IP above:
-2C:B6:C2:34:58:4A 
-80:35:C1:35:5E:C2
-4C:50:DD:2F:EC:3C 
-4A:DB:CF:0A:AB:B9
-CA:4D:A2:62:0B:61 
-FA:B4:D0:F4:F3:A6
-B8:1E:A4:D3:FD:2F
-
-After completing the scan, I opened the **Topology** section in Zenmap, enabled the legend and saved the network topology in PDF format as required by the practical task.
+After completing the scan, I opened the **Topology** section in Zenmap, enabled the legend, and saved the network topology in PDF format as required by the practical task.
 
 
-# 5. Risk Analysis / Impact
+# 5. Risk Analysis / Impact 📝
 
 Based on the information collected during the footprinting and network scanning activities, I identified the following potential risks.
 
@@ -106,7 +104,7 @@ The practical exercises primarily involved information gathering and host discov
 
 Therefore, the presence of information such as a software version, IP address or DNS record does not by itself mean that the system is vulnerable. Further authorized security testing would be required to confirm any actual vulnerability.
 
-# 6. Recommendations
+# 6. Recommendations 💡
 
 Based on the observations from these activities, I recommend the following security improvements:
 
@@ -137,36 +135,37 @@ Based on the observations from these activities, I recommend the following secur
 9.  **Perform security testing with authorization**  
     Reconnaissance and scanning should only be performed against systems and networks where appropriate authorization has been provided.
 
-# 7. Conclusion
+# 7. Conclusion 🔐
 
-During Week 2 of my Cybersecurity & Ethical Hacking internship, I completed practical activities covering footprinting, reconnaissance and network scanning.
+During Week 2 of my Cybersecurity & Ethical Hacking internship, I completed practical activities covering footprinting, reconnaissance, and network scanning.
 
 In the footprinting activity, I used six Kali Linux tools to collect information about the target domain. I learned how WHOIS can provide domain information, WhatWeb can identify web technologies, Nslookup can resolve domain names, Curl can inspect HTTP headers, Wafw00f can identify a WAF, and DNSRecon can provide additional DNS information.
 
-In the network scanning activity, I used Zenmap to identify my local network configuration and discover active hosts. I also collected IP and MAC address information and created a network topology.
+In the network scanning activity, I used Zenmap to identify my local network configuration and discover active hosts and opened ports. I also collected IP and MAC address information and created a network topology.
 
-The exercises showed me that information gathering is an important part of cybersecurity. Even before attempting to exploit a system, a security professional can learn a significant amount about an environment by carefully analyzing publicly available information and network responses.
+The project showed me that information gathering is an important part of cybersecurity. Even before attempting to exploit a system, a security professional can learn a significant amount about an environment by carefully analyzing publicly available information and network responses.
 
 I also learned that technical findings should be documented clearly. A good cybersecurity report should explain what was performed, what was discovered, what the observation means, what risk it may create, and what can be done to reduce that risk.
 
 Finally, I learned that reconnaissance and scanning must always be performed within an authorized scope. These activities were completed as part of the assigned educational cybersecurity lab.
 
-# 8. Evidences Collected
+# 8. Evidences Collected 📸
 
-*Screenshots collected as evidence during the activities (stored in the `screenshots/` folder):*
+*Screenshots collected as evidence during the activities (stored in the `evidence/` folder):*
 
-![whois output](screenshots/1_whois.png)
+![whois output](evidence/whois.png)
 
-![whatweb output](screenshots/2_whatweb.png)
+![whatweb output](evidence/whatweb.png)
 
-![nslookup output](screenshots/3_nslookup.png)
+![nslookup output](evidence/nslookup.png)
 
-![curl output](screenshots/4_curl.png)
+![curl output](evidence/curl-I.png)
 
-![wafw00f output](screenshots/5_wafw00f.png)
+![wafw00f output](evidence/wafw00f.png)
 
-![dnsrecon output](screenshots/7_zenmap.png)
+![dnsrecon output](evidence/dnsrecon.png)
 
-![Zenmap scan and topology](screenshots/8_zenmap2.png)
+![Zenmap scan](evidence/pingscan.png)
+![Zenmap topology](evidence/legend.png)
 
 -End-
