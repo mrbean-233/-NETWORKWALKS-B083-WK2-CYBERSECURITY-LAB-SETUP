@@ -105,7 +105,7 @@ And these are the corresponding MAC addresses for each IP above:
 `FA:B4:D0:F4:F3:A6`
 `B8:1E:A4:D3:FD:2F`
 
-I then eventually opened the **Topology** section in Zenmap, enabled the legend, and saved the network topology in PDF format as required by the practical task.
+I then opened the **Topology** section in Zenmap, enabled the legend, and saved the network topology in PDF format as required by the practical task.
 
 
 # 5. Evidences Collected 📸
@@ -123,6 +123,9 @@ I then eventually opened the **Topology** section in Zenmap, enabled the legend,
 ![wafw00f output](evidence/wafw00f.png)
 
 ![dnsrecon output](evidence/dnsrecon.png)
+
+![theHarvester source:Baidu](evidence/harversterbaidu.png)
+![theHarvester source:all](evidence/harversterall.png)
 
 ![Zenmap scan](evidence/pingscan.png)
 ![Zenmap topology](evidence/legend.png)
