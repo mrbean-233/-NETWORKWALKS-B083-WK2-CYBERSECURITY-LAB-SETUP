@@ -7,20 +7,20 @@
 |---|---|
 | **Pentester Name (Cybersecurity Professional)** | **Vivi Hanna Handison** |
 | **Program/Batch** | B083-Networkwalks |
-| **Date** | 17 September 2026 |
-| **Modules completed** | W2-PM1 (Multiple Kali Tools)<br>W2-PM5 (Zenmap Scanning) |
-| **Client/Target** | 1. Networkwalks (secured written permission already)<br>2. My own local LAN Network |
+| **Date** | 18 September 2026 |
+| **Modules completed** | W2-PM1 (Multiple Kali Tools)<br>W2-PM4 (theHarvester)<br>W2-PM5 (Zenmap Scanning) |
+| **Client/Target** | 1. Networkwalks (secured written permission already)<br>2. Microsoft (public source only, passive OSINT only)<br>3. My own local LAN Network |
 | **Permission secured from client?** | Yes |
 | **Phases covered** | **Phase 1:** Reconnaissance & Footprinting<br>**Phase 2:** Scanning & Network Discovery<br>**Phase 3-5:** In Progress |
 
 # 1. Liability Disclaimer ⚠️
 
-I performed these activities only on systems & devices where I had secured written permission, or on devices/systems I own. All these materials are for educational and research purposes only. Do not use anything from here to break the law. The instructor, the authors, and Networkwalks are not responsible for what you do with this knowledge. Every action you take is your own responsibility. Misuse can lead to criminal charges, heavy fines, loss of your job, and a permanent record. In most countries, unauthorised access is a crime even when nothing is damaged.
+I performed these activities only on systems & devices where I had secured written permission, or on devices/systems I own. All these materials are for educational and research purposes only. Do not use anything from here to break the law. The instructor, the authors, and Networkwalks are not responsible for what you do with this knowledge. Every action I take is my own responsibility. Misuse can lead to criminal charges, heavy fines, loss of my job, and a permanent record. In most countries, unauthorised access is a crime even when nothing is damaged.
 
 # 2. Introduction 👋
-This report covers footprinting the networkwalks.com domain using multiple Kali Linux tools (W2-PM1) and scanning my own local network with Zenmap (W2-PM5). One module covers the footprinting phase, and the other covers the scanning phase, so together they show how an attacker moves from gathering public information to mapping live hosts on a network. It is the Week 2 part of my ongoing internship program at Networkwalks.
+This report covers footprinting the networkwalks.com domain using multiple Kali Linux tools (W2-PM1), theHarvester (W2-PM4), and scanning my own local network with Zenmap (W2-PM5). The first two modules cover the footprinting phase, and the other covers the scanning phase, so together they show how an attacker moves from gathering public information to mapping live hosts on a network. This is Week 2 part of my ongoing internship program at Networkwalks.
+All commands were run in Kali Linux (footprinting) and on a Windows PC with Zenmap installed (scanning). Every step below includes the exact command used, the result I observed, and a screenshot as evidence
 
-All commands were run in Kali Linux (footprinting) and on a Windows PC with Zenmap installed (scanning). Every step below includes the exact command used, the result I observed, a screenshot as evidence, and a short note on why the finding matters from an attacker's point of view.
 
 # 3. Tools Used 🔨
 
@@ -35,7 +35,8 @@ The table below lists each tool used in this report and its purpose.
 | curl -I              | Read the HTTP response headers of the website and reveals the server type.                   |
 | wafw00f              | Detect whether a Web Application Firewall protects the site.     |
 | dnsrecon             | Enumerate all DNS records (NS, MX, SPF, TXT, SRV).               |
-| Zenmap (Nmap GUI)    | Scan the local subnet to find live hosts, open hosts, IPs, and MAC addresses. |
+| theHarvester         | Gather information on emails, subdomains, hosts, employee names, open ports, and banners.   |
+| Zenmap (Nmap GUI)    | Scan the local subnet to find live hosts, open ports, IPs, and MAC addresses. |
 | Windows CMD          | Identify Local IP and MAC address.                        |
 
 # 4. Activities Performed
@@ -55,6 +56,30 @@ I performed reconnaissance against the `networkwalks.com` domain using six Kali 
 5. **Wafw00f** was used to determine whether a Web Application Firewall was protecting the website. The result identified **ModSecurity (SpiderLabs)**.
 
 6. **DNSRecon** was used to enumerate DNS records. The results provided information on name servers, mail servers, SPF/TXT records, service records, and DNS software information.
+
+## 4.3 theHarvester👣
+I gathered public information from microsoft.com using theHarvester, run with both the Baidu source and all available sources.
+
+`theHarvester -d microsoft.com -l 1000 -b baidu`
+The Baidu source returns 0 IPs, emails, people, and hosts, which is expected because Baidu is a restricted search engine in China and because of rate limits. 
+
+`theHarvester -d microsoft.com -l 50 -b all`
+After scanning through all available sources, interesting results gathered from Hudson Rock Search return: 
+
+- **602,369 total compromised items**
+
+- **16,140 employees and 581,626 users flagged in breaches.**
+
+- **43 hosts from employee URLs.**
+ 
+Several sources (LeakIX, Windvane, THC, BuiltWith, SecurityScorecard, and others) returned missing API key warnings, which is expected since those sources require a paid or registered API key that isn't set up in this lab environment.
+
+
+Note: 
+*-d: Specifies the target domain (e.g., microsoft.com).*
+*-l: Limits the number of search results to process (e.g., 50 or 1000).*
+*-b: Specifies the data source or search engine to query (e.g., baidu or all).*
+
 
 ## 4.2 Network Scanning with Zenmap 🫆
 
@@ -80,76 +105,10 @@ And these are the corresponding MAC addresses for each IP above:
 `FA:B4:D0:F4:F3:A6`
 `B8:1E:A4:D3:FD:2F`
 
-After completing the scan, I opened the **Topology** section in Zenmap, enabled the legend, and saved the network topology in PDF format as required by the practical task.
+I then eventually opened the **Topology** section in Zenmap, enabled the legend, and saved the network topology in PDF format as required by the practical task.
 
 
-# 5. Risk Analysis / Impact 📝
-
-Based on the information collected during the footprinting and network scanning activities, I identified the following potential risks.
-
-| **\#** | **Risk / Finding**                           | **Evidence / Observation**                                  | **Potential Impact**                                                                                            | **Risk Level** |
-|--------|----------------------------------------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|----------------|
-| 1      | Web technology information exposed           | WhatWeb identified WordPress and WP Download Manager        | Attackers may use exposed technology/version information to identify software requiring further security review | **● Medium**   |
-| 2      | Server IP address identifiable               | Nslookup resolved the domain to `192.232.216.135`           | Provides information about the network location of the web service                                              | **● Low**      |
-| 3      | HTTP technical information exposed           | Curl returned HTTP response headers and exposed `/wp-json/` | May assist technology fingerprinting and further enumeration                                                    | **● Low**      |
-| 4      | WAF technology identifiable                  | Wafw00f identified ModSecurity (SpiderLabs)                 | Reveals information about the web application’s security architecture                                           | **● Low**      |
-| 5      | DNS infrastructure information exposed       | DNSRecon identified DNS, mail and service-related records   | DNS information can help build a broader infrastructure profile                                                 | **● Medium**   |
-| 6      | Multiple live hosts visible on local network | Zenmap identified four live hosts in the example network    | Unknown or unauthorized devices may potentially be present on a network                                         | **● Medium**   |
-
-**Risk level key:** ● Critical ● Medium ● Low
-
-The risks above are observations from the footprinting and scanning exercises, not confirmed vulnerabilities.
-
-The practical exercises primarily involved information gathering and host discovery. No exploitation or vulnerability validation was performed as part of these two modules.
-
-Therefore, the presence of information such as a software version, IP address or DNS record does not by itself mean that the system is vulnerable. Further authorized security testing would be required to confirm any actual vulnerability.
-
-# 6. Recommendations 💡
-
-Based on the observations from these activities, I recommend the following security improvements:
-
-1.  **Review publicly exposed technology information**  
-    Organizations should regularly review what information about their web technologies, CMS and plugins is publicly visible.
-
-2.  **Keep software updated**  
-    CMS platforms, plugins and other web technologies should be regularly updated and reviewed against current security advisories.
-
-3.  **Review HTTP headers**  
-    HTTP response headers should be reviewed to determine whether unnecessary technical information is being exposed.
-
-4.  **Review DNS records regularly**  
-    DNS records should be checked periodically to ensure that only required information and services are publicly exposed.
-
-5.  **Properly configure and monitor the WAF**  
-    Keep the WAF (ModSecurity) enabled and tuned, since it already blocks naive attacks.
-
-6.  **Perform regular internal network discovery**  
-    Organizations should periodically scan their own networks to identify active devices.
-
-7.  **Investigate unknown devices**  
-    Any unexpected device discovered during network scanning should be investigated and verified.
-
-8.  **Maintain network documentation**  
-    Network topology and device information should be documented and updated regularly.
-
-9.  **Perform security testing with authorization**  
-    Reconnaissance and scanning should only be performed against systems and networks where appropriate authorization has been provided.
-
-# 7. Conclusion 🔐
-
-During Week 2 of my Cybersecurity & Ethical Hacking internship, I completed practical activities covering footprinting, reconnaissance, and network scanning.
-
-In the footprinting activity, I used six Kali Linux tools to collect information about the target domain. I learned how WHOIS can provide domain information, WhatWeb can identify web technologies, Nslookup can resolve domain names, Curl can inspect HTTP headers, Wafw00f can identify a WAF, and DNSRecon can provide additional DNS information.
-
-In the network scanning activity, I used Zenmap to identify my local network configuration and discover active hosts and opened ports. I also collected IP and MAC address information and created a network topology.
-
-The project showed me that information gathering is an important part of cybersecurity. Even before attempting to exploit a system, a security professional can learn a significant amount about an environment by carefully analyzing publicly available information and network responses.
-
-I also learned that technical findings should be documented clearly. A good cybersecurity report should explain what was performed, what was discovered, what the observation means, what risk it may create, and what can be done to reduce that risk.
-
-Finally, I learned that reconnaissance and scanning must always be performed within an authorized scope. These activities were completed as part of the assigned educational cybersecurity lab.
-
-# 8. Evidences Collected 📸
+# 5. Evidences Collected 📸
 
 *Screenshots collected as evidence during the activities (stored in the `evidence/` folder):*
 
